@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TO-DO Kanban</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+
+  <div id="login-screen" class="screen">
+    <div class="login-box">
+      <h1>🗂️ TO-DO Kanban</h1>
+      <p class="subtitle">Faça login para continuar</p>
+      <form id="login-form">
+        <label for="username">Usuário</label>
+        <input type="text" id="username" placeholder="admin" autocomplete="username" required />
+
+        <label for="password">Senha</label>
+        <input type="password" id="password" placeholder="admin" autocomplete="current-password" required />
+
+        <button type="submit">Entrar</button>
+      </form>
+      <p id="login-error" class="error hidden"></p>
+      <p class="hint">Credenciais de teste: <strong>admin / admin</strong></p>
+    </div>
+  </div>
+
+
+  <div id="app-screen" class="screen hidden">
+    <header>
+      <h1>🗂️ TO-DO Kanban</h1>
+      <button id="logout-btn">Sair</button>
+    </header>
+
+    <form id="task-form">
+      <input type="text" id="task-title" placeholder="Título da tarefa" required />
+      <input type="text" id="task-desc" placeholder="Descrição (opcional)" />
+      <button type="submit">+ Adicionar</button>
+    </form>
+    <p id="app-error" class="error hidden"></p>
+
+    <main class="board">
+      <section class="column" data-status="todo">
+        <h2>A Fazer</h2>
+        <div class="cards" id="col-todo"></div>
+      </section>
+      <section class="column" data-status="doing">
+        <h2>Em Andamento</h2>
+        <div class="cards" id="col-doing"></div>
+      </section>
+      <section class="column" data-status="done">
+        <h2>Concluído</h2>
+        <div class="cards" id="col-done"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: todo_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: todo_user
+      POSTGRES_PASSWORD: todo_pass
+      POSTGRES_DB: todo_db
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - backend-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U todo_user -d todo_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  
+  backend:
+    build:
+      context: ./backend
+    container_name: todo_backend
+    restart: unless-stopped
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: todo_user
+      DB_PASSWORD: todo_pass
+      DB_NAME: todo_db
+      JWT_SECRET: change_this_secret_in_production
+      JWT_EXPIRES_IN: 2h
+      PORT: 5000
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - backend-net
+      - frontend-net
+    expose:
+      - "5000"
+
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: todo_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    networks:
+      - frontend-net
+    ports:
+      - "8080:80"
+
+networks:
+  frontend-net:
+    driver: bridge
+  backend-net:
+    driver: bridge
+
+volumes:
+  db_data:
+    name: todo_db_data
